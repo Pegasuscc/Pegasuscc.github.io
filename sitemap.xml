@@ -8,7 +8,27 @@
   </url>
   
   <url>
+    <loc>https://Pegasuscc.github.io/categories/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/categories/java/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/tags/jndi%E6%B3%A8%E5%85%A5/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://Pegasuscc.github.io/post/jndi%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/tags/ldap/</loc>
     <lastmod>2020-08-19T00:18:16+08:00</lastmod>
   </url>
   
@@ -18,21 +38,63 @@
   </url>
   
   <url>
+    <loc>https://Pegasuscc.github.io/tags/rmi/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/tags/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/categories/web/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://Pegasuscc.github.io/archives/</loc>
     <lastmod>2019-05-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
+    <loc>https://Pegasuscc.github.io/tags/css/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/tags/html/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/tags/markdown/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/post/markdown-syntax/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/categories/syntax/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/tags/themes/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/categories/themes/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://Pegasuscc.github.io/about/</loc>
     <lastmod>2019-02-28T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Pegasuscc.github.io/categories/</loc>
-  </url>
-  
-  <url>
-    <loc>https://Pegasuscc.github.io/tags/</loc>
   </url>
   
 </urlset>

@@ -18,7 +18,7 @@
 <meta name="twitter:image" content="https://Pegasuscc.github.io/images/"/>
 
 <meta name="twitter:title" content="Jndi注入漏洞"/>
-<meta name="twitter:description" content="0x01 JNDI简介 Jndi 全称是：Java Naming and Directory Interface，叫做Java命名和目录接口，是SUN公司提供的一种标准的Java命名系统接口。JNDI提供统一的接口和命名、目录等服务进行交互，如RMI、LDAP、DNS、CORBA。通过底层不同的JNDI服务提供者接口(SPI)的实现，由Naming Manager将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互，如绑定、查找等动作。如下图："/>
+<meta name="twitter:description" content="本文简单分析下jndi注入的原理和典型攻击方式"/>
 
 </head><body><div class="sidebar animated fadeInDown">
     <div class="logo-title">
@@ -159,7 +159,6 @@ Reference reference = new Reference(&quot;MyClass&quot;,&quot;MyClass&quot;,Fact
 ReferenceWrapper wrapper = new ReferenceWrapper(reference); 
 ctx.bind(&quot;Foo&quot;, wrapper);
 </code></pre>
-<p>通过引用来获取对象有其他方式，但是使用工厂这种方式攻击者尤其感兴趣，原因在于工厂类可以存储在任意远程地址且会在应用本地进行实例化，这就意味着攻击者可以构造恶意的工厂类，使应用加载使用了恶意工厂类的引用，从而在实例化工厂时执行恶意代码。</p>
 <h2 id="0x02-漏洞成因">0x02 漏洞成因</h2>
 <p>JNDI注入产生的原因可以归为以下几点：</p>
 <ol>
@@ -365,7 +364,11 @@ ctx.modifyAttributes(&quot;uid=target,ou=People,dc=example,dc=com&quot;, mods);
     <div class="post-footer">
       <div class="info">
         
+<span class="separator"><a class="category" href="/categories/java/">java</a><a class="category" href="/categories/web/">web</a></span>
+
         
+    <span class="separator"><a class="tag" href="/tags/jndi%E6%B3%A8%E5%85%A5/">jndi注入</a><a class="tag" href="/tags/ldap/">ldap</a><a class="tag" href="/tags/rmi/">rmi</a></span>
+
       </div>
     </div>
 
