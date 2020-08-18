@@ -3,13 +3,23 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://Pegasuscc.github.io/archives/</loc>
-    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
+    <loc>https://Pegasuscc.github.io/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://Pegasuscc.github.io/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <loc>https://Pegasuscc.github.io/post/jndi%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/post/</loc>
+    <lastmod>2020-08-19T00:18:16+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://Pegasuscc.github.io/archives/</loc>
+    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -34,11 +44,6 @@
   
   <url>
     <loc>https://Pegasuscc.github.io/post/markdown-syntax/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Pegasuscc.github.io/post/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   

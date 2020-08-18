@@ -6,10 +6,19 @@
     <description>Recent content in Posts on blog of c00l</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 19 Aug 2020 00:18:16 +0800</lastBuildDate>
     
 	<atom:link href="https://Pegasuscc.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Jndi注入漏洞</title>
+      <link>https://Pegasuscc.github.io/post/jndi%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/</link>
+      <pubDate>Wed, 19 Aug 2020 00:18:16 +0800</pubDate>
+      
+      <guid>https://Pegasuscc.github.io/post/jndi%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/</guid>
+      <description>0x01 JNDI简介 Jndi 全称是：Java Naming and Directory Interface，叫做Java命名和目录接口，是SUN公司提供的一种标准的Java命名系统接口。JNDI提供统一的接口和命名、目录等服务进行交互，如RMI、LDAP、DNS、CORBA。通过底层不同的JNDI服务提供者接口(SPI)的实现，由Naming Manager将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互，如绑定、查找等动作。如下图：</description>
+    </item>
     
     <item>
       <title>Markdown Syntax Guide</title>
